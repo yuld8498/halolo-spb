@@ -31,7 +31,7 @@ pipeline {
                 sh 'docker network create dev || echo "this network exists" '
                 sh 'echo y | docker container prune '
 
-                sh 'docker container run -d --rm --name yuld/halolo -p 24001:24001 --network dev truongthanh8498/spring'
+                sh 'docker container run -d --rm --name yuld/halolo -p 24001:24001 --network dev yuld/halolo'
             }
         }
     }

@@ -7,7 +7,7 @@ pipeline {
 
     stages {
         stage('Build with maven...') {
-            step {
+            steps {
                 sh 'mvn --version'
                 sh 'java --version'
                 sh 'mvn clean package -Dmaven.test.failure.ignore=true'
@@ -15,7 +15,7 @@ pipeline {
         }
 
         stage('Packing/push image') {
-            step {
+            steps {
                 withDockerRegistry(credentialsId: 'dockerhub', url: 'https://index.docker.io/v1') {
                     sh 'docker build -t yuld/spb-halolo'
                     sh 'docker push yuld/spb-halolo '
@@ -24,7 +24,7 @@ pipeline {
         }
 
         stage('Deploy spring dev') {
-            step {
+            steps {
                 echo 'Deploying and cleaning...'
                 sh 'docker image pull yuld/spb-halolo'
                 sh 'docker container stop yuld/spb-halolo || echo "this container not exists" '

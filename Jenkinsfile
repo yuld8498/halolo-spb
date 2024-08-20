@@ -6,7 +6,7 @@ pipeline {
     }
 
     stages {
-        stage('Build with maven') {
+        stage('Build with maven...') {
             step {
                 sh 'mvn --version'
                 sh 'java --version'

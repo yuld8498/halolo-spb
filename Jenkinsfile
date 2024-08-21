@@ -24,18 +24,18 @@ pipeline {
             }
         }
 
-        stage('Deploy spring dev') {
-            steps {
-                sh 'echo "pull image..."'
-                sh 'docker image pull truongthanh8498/spring:spb-halolo'
-                sh 'echo "pull image 2..."'
-                sh 'docker container stop yuld-halolo || echo "this container not exists" '
-                sh 'docker network create dev || echo "this network exists" '
-                sh 'echo y | docker container prune '
+        // stage('Deploy spring dev') {
+        //     steps {
+        //         sh 'echo "pull image..."'
+        //         sh 'docker image pull truongthanh8498/spring:spb-halolo'
+        //         sh 'echo "pull image 2..."'
+        //         sh 'docker container stop yuld-halolo || echo "this container not exists" '
+        //         sh 'docker network create dev || echo "this network exists" '
+        //         sh 'echo y | docker container prune '
 
-                sh 'docker container run -d --rm --name yuld-halolo -p 24001:24001 --network dev truongthanh8498/spring:spb-halolo'
-            }
-        }
+        //         sh 'docker container run -d --rm --name yuld-halolo -p 24001:24001 --network dev truongthanh8498/spring:spb-halolo'
+        //     }
+        // }
     }
 
     post {

@@ -26,9 +26,7 @@ pipeline {
 
         stage('Deploy spring dev') {
             steps {
-                withDockerRegistry(credentialsId: 'dockerhub', url: 'https://index.docker.io/v1') {
-                    sh 'docker image pull truongthanh8498/spring:spb-halolo'
-                }
+                sh 'docker image pull truongthanh8498/spring:spb-halolo'
                 sh 'docker container stop yuld-halolo || echo "this container not exists" '
                 sh 'docker network create dev || echo "this network exists" '
                 sh 'echo y | docker container prune '

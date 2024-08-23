@@ -16,10 +16,10 @@ pipeline {
 
         stage('Packing/push image') {
                 steps {
-                withDockerRegistry(credentialsId: 'dockerhub', url: 'https://index.docker.io/v1') {
+                withDockerRegistry(credentialsId: 'dockerhub', url: 'https://registry.hub.docker.com') {
                     sh 'docker build -t yuld/spb-halolo .'  // Assuming Dockerfile is in the workspace
                     sh 'docker tag yuld/spb-halolo truongthanh8498/spring:spb-halolo'
-                    sh ' docker push truongthanh8498/spring:spb-halolo'
+                    sh 'docker push truongthanh8498/spring:spb-halolo'
                 }
             }
         }

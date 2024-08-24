@@ -1,30 +1,41 @@
 pipeline {
     agent any
 
-    tools {
-        maven 'my-maven'
+ environment {
+        IMAGE_NAME = 'truongthanh8498/spring'
+        CREDENTIALS_ID = 'dockerhub' // ID của credentials đã tạo trong Jenkins
     }
 
     stages {
-        stage('Build with maven...') {
-            steps {
-                sh 'mvn --version'
-                sh 'java --version'
-                sh 'mvn clean package -Dmaven.test.failure.ignore=true'
-            }
-        }
+        stage('Build Docker Image') {
+                    steps {
+                        // Xây dựng Docker image từ Dockerfile
+                        script {
+                            def imageTag = "latest" // Hoặc bạn có thể dùng một tag khác, ví dụ: "v1.0.0"
+                            sh "docker build -t ${IMAGE_NAME}:${imageTag} ."
+                        }
+                    }
+                }
 
-        stage('Packing/push image') {
-                steps {
-                withDockerRegistry(credentialsId: 'dockerhub', url: 'https://registry.hub.docker.com') {
-                    sh 'pwd'
-                    sh 'docker build -t yuld/spb-halolo .'  // Assuming Dockerfile is in the workspace
-                    sh 'docker tag yuld/spb-halolo truongthanh8498/spring:spb-halolo'
-                    sh 'docker push truongthanh8498/spring:spb-halolo'
+        stage('Login to Docker Hub') {
+                   steps {
+                       // Đăng nhập vào Docker Hub
+                       script {
+                           withCredentials([usernamePassword(credentialsId: "${CREDENTIALS_ID}", passwordVariable: 'DOCKER_HUB_PASSWORD', usernameVariable: 'DOCKER_HUB_USERNAME')]) {
+                               sh 'echo $DOCKER_HUB_PASSWORD | docker login -u $DOCKER_HUB_USERNAME --password-stdin'
+                           }
+                       }
+                   }
+               }
+stage('Push Docker Image') {
+            steps {
+                // Đẩy Docker image lên Docker Hub
+                script {
+                    def imageTag = "latest"
+                    sh "docker push ${IMAGE_NAME}:${imageTag}"
                 }
             }
         }
-
         // stage('Deploy spring dev') {
         //     steps {
         //         sh 'echo "pull image..."'
@@ -39,9 +50,16 @@ pipeline {
         // }
     }
 
-    post {
+post {
         always {
-            cleanWs()
+            // Đăng xuất khỏi Docker Hub sau khi hoàn thành
+            sh 'docker logout'
+        }
+        success {
+            echo 'Docker image pushed successfully.'
+        }
+        failure {
+            echo 'Failed to push Docker image.'
         }
     }
 }

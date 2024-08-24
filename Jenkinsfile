@@ -6,15 +6,7 @@ pipeline {
     }
 
     stages {
-        stage('Clone Repository') {
-                steps {
-                    script {
-                        git credentialsId: 'github-ssh', url: 'https://github.com/yuld8498/halolo-spb'
-                    }
-                }
-            }
-
-        stage('Build with maven...') {
+        stage('Build with maven......') {
             steps {
                 sh 'mvn --version'
                 sh 'java --version'

@@ -17,7 +17,7 @@ pipeline {
         stage('Packing/push image') {
                 steps {
                     sh 'pwd'
-                    withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
                         sh 'echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin'
                         sh 'docker build -t yuld/spb-halolo .'  // Assuming Dockerfile is in the workspace
                         sh 'docker tag yuld/spb-halolo truongthanh8498/spring:spb-halolo'
